@@ -1,0 +1,369 @@
+html_template <- '<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aponar Adhikar &mdash; West Bengal scheme finder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#20232B; --ink-soft:#4B5160; --paper:#FAF5EA; --paper-raised:#FFFFFF;
+    --indigo:#1E2A4A; --indigo-deep:#141B31; --terracotta:#B5502E; --terracotta-light:#F2E1D6;
+    --green:#3F6B48; --green-light:#E1EBDF; --gold:#C9932A; --gold-light:#F7E8C8;
+    --line: rgba(30,42,74,0.14); --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--paper);color:var(--ink);font-family:"Hind Siliguri","Inter",sans-serif;line-height:1.55;}
+  h1,h2,h3,.display{font-family:"Tiro Bangla",serif;font-weight:400;color:var(--indigo-deep);letter-spacing:0.2px;}
+  a{color:inherit;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .alpona{width:100%;height:34px;overflow:hidden;display:block;}
+  .alpona svg{width:100%;height:100%;display:block;}
+  header.site{background:var(--indigo-deep);color:#F3EEE1;padding:18px 0;border-bottom:3px solid var(--gold);}
+  header.site .row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .brand{display:flex;flex-direction:column;}
+  .brand .bn{font-family:"Tiro Bangla",serif;font-size:26px;color:#fff;}
+  .brand .en{font-size:12.5px;letter-spacing:1.2px;text-transform:uppercase;color:#C7BFA8;}
+  .site-tag{font-size:13.5px;color:#D8D2C0;max-width:320px;text-align:right;}
+  .hero{padding:56px 0 40px;}
+  .hero h1{font-size:40px;margin:0 0 12px;}
+  .hero p.lede{font-size:17.5px;color:var(--ink-soft);max-width:620px;margin:0 0 30px;}
+  .eligibility-box{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px;}
+  .eligibility-box .q{font-size:14.5px;color:var(--ink-soft);margin:0 0 14px;font-weight:500;}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;}
+  .chip{border:1px solid var(--line);background:#fff;padding:9px 16px;border-radius:999px;font-size:14.5px;cursor:pointer;color:var(--ink);transition:background .12s,color .12s,border-color .12s;user-select:none;}
+  .chip:hover{border-color:var(--indigo);}
+  .chip.active{background:var(--indigo-deep);border-color:var(--indigo-deep);color:#fff;}
+  .search-row{display:flex;gap:10px;align-items:center;}
+  .search-row input{flex:1;padding:11px 14px;border-radius:10px;border:1px solid var(--line);font-size:15px;font-family:inherit;background:#fff;color:var(--ink);}
+  .search-row input:focus{outline:2px solid var(--indigo);outline-offset:1px;}
+  .count-line{margin-top:16px;font-size:14px;color:var(--ink-soft);}
+  .count-line b{color:var(--terracotta);font-weight:600;}
+  .schemes{padding:8px 0 20px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:22px;}
+  .card{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;display:flex;flex-direction:column;gap:10px;}
+  .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .card h3{font-size:19px;margin:0;line-height:1.3;}
+  .card .bn-name{font-family:"Tiro Bangla",serif;font-size:14px;color:var(--ink-soft);margin-top:2px;}
+  .badge{font-size:11.5px;padding:4px 10px;border-radius:999px;white-space:nowrap;font-weight:600;letter-spacing:.2px;}
+  .badge.live{background:var(--green-light);color:var(--green);}
+  .badge.rolling{background:var(--gold-light);color:#8A6412;}
+  .badge.announced{background:var(--terracotta-light);color:var(--terracotta);}
+  .card .benefit{font-size:15px;font-weight:600;color:var(--indigo-deep);}
+  .card .who{font-size:14px;color:var(--ink-soft);}
+  .card .apply{font-size:13.5px;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:10px;margin-top:4px;}
+  .card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;}
+  .tag{font-size:11.5px;background:#F1EEE4;color:var(--ink-soft);padding:3px 9px;border-radius:6px;}
+  .card .link-btn{margin-top:6px;display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--indigo-deep);text-decoration:none;border:1px solid var(--indigo-deep);padding:8px 14px;border-radius:8px;width:fit-content;transition:background .12s,color .12s;}
+  .card .link-btn:hover{background:var(--indigo-deep);color:#fff;}
+  .no-results{padding:40px 10px;text-align:center;color:var(--ink-soft);font-size:15px;}
+  .warn{background:var(--indigo-deep);color:#F3EEE1;padding:44px 0 48px;margin-top:20px;}
+  .warn h2{color:#fff;font-size:26px;margin:0 0 10px;}
+  .warn p.intro{color:#C7BFA8;max-width:640px;margin:0 0 24px;font-size:15.5px;}
+  .warn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+  .warn-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:18px 20px;}
+  .warn-card .n{font-family:"Tiro Bangla",serif;font-size:22px;color:var(--gold);margin-bottom:6px;}
+  .warn-card p{margin:0;font-size:14.5px;color:#E7E1D2;}
+  footer{padding:32px 0 48px;font-size:13px;color:var(--ink-soft);}
+  footer .disc{border-left:3px solid var(--terracotta);padding:10px 16px;background:var(--terracotta-light);border-radius:0 8px 8px 0;margin-bottom:18px;color:#6B3117;}
+  footer a{color:var(--indigo);text-decoration:underline;}
+  @media (max-width:640px){ .hero h1{font-size:31px;} .site-tag{display:none;} }
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap row">
+    <div class="brand">
+      <span class="bn">\u0986\u09aa\u09a8\u09be\u09b0 \u0985\u09a7\u09bf\u0995\u09be\u09b0</span>
+      <span class="en">Aponar Adhikar &middot; Your entitlement</span>
+    </div>
+    <div class="site-tag">West Bengal government schemes, straight from the source. No agent, no fee.</div>
+  </div>
+</header>
+
+<div class="alpona" aria-hidden="true">
+  <svg viewBox="0 0 800 34" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="alpona-pattern" width="50" height="34" patternUnits="userSpaceOnUse">
+        <circle cx="25" cy="17" r="3" fill="#C9932A"/>
+        <path d="M25 4 C 33 10, 33 24, 25 30 C 17 24, 17 10, 25 4 Z" fill="none" stroke="#B5502E" stroke-width="1.4"/>
+        <path d="M4 17 C 10 9, 24 9, 25 17 C 24 25, 10 25, 4 17 Z" fill="none" stroke="#1E2A4A" stroke-width="1" opacity="0.5"/>
+      </pattern>
+    </defs>
+    <rect width="800" height="34" fill="url(#alpona-pattern)"/>
+  </svg>
+</div>
+
+<section class="hero">
+  <div class="wrap">
+    <h1>Find out what you actually qualify for.</h1>
+    <p class="lede">West Bengal\'s new government has rolled out and revamped a long list of schemes since May 2026 &mdash; health cover, cash support, farmer top-ups, youth stipends, scholarships and more. This page pulls them into one place, with the real application links, so you never need to pay a middleman to find out what\'s yours.</p>
+
+    <div class="eligibility-box">
+      <p class="q">I am looking for schemes for&hellip;</p>
+      <div class="chips" id="audience-chips"></div>
+      <div class="search-row">
+        <input type="text" id="search" placeholder="Search by name, e.g. health, ration, scholarship" aria-label="Search schemes">
+      </div>
+      <p class="count-line" id="count-line"></p>
+    </div>
+  </div>
+</section>
+
+<section class="schemes">
+  <div class="wrap">
+    <div class="grid" id="scheme-grid"></div>
+  </div>
+</section>
+
+<div class="alpona" aria-hidden="true">
+  <svg viewBox="0 0 800 34" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="800" height="34" fill="url(#alpona-pattern)"/>
+  </svg>
+</div>
+
+<section class="warn">
+  <div class="wrap">
+    <h2>Before you apply</h2>
+    <p class="intro">Every scheme on this page is free to apply for, directly with the government. Middlemen who charge a "processing fee" or promise to "guarantee approval" are not part of any official process &mdash; and they are the exact problem this page exists to remove.</p>
+    <div class="warn-grid">
+      <div class="warn-card"><div class="n">No fee</div><p>No official West Bengal or central scheme ever charges a fee to apply, check eligibility, or receive your card. If someone asks for money, that is not the government.</p></div>
+      <div class="warn-card"><div class="n">Apply direct</div><p>Use the official portal linked on each card, or visit a Duare Sarkar camp or Bangla Sahayta Kendra in person &mdash; both are free, government-run, and open to walk-ins.</p></div>
+      <div class="warn-card"><div class="n">Keep proof</div><p>Always keep a copy or screenshot of what you submit, and note your application or URN number. It is your only proof if a claim is delayed or disputed.</p></div>
+      <div class="warn-card"><div class="n">Report agents</div><p>If someone demands payment to process a government scheme, that can be reported to the local BDO office or the scheme\'s own helpline number.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="disc">Many of these schemes were only announced in West Bengal\'s May 2026 cabinet decisions and the June 2026 state budget, so exact amounts, start dates and application steps are still being finalised by departments. Always confirm the current details on the official portal linked before you apply. This page is independent and not run by any government body.</p>
+    <p>Compiled July 2026, based on public reporting on West Bengal\'s 2026 government transition and budget. Have a correction or a scheme to add? That\'s exactly the kind of feedback this project needs.</p>
+  </div>
+</footer>
+
+<script>
+const schemes = [
+  {
+    name:"Ayushman Bharat (PM-JAY)",
+    bn:"আয়ুষ্মান ভারত",
+    status:"rolling", statusLabel:"Approved, rolling out",
+    audience:["everyone","women","farmers","students"],
+    tags:["Health"],
+    benefit:"Up to ₹5 lakh/year free hospital cover per family",
+    who:"Eligible families under the national health scheme; approved for West Bengal on 11 May 2026 after years of the state opting out.",
+    apply:"Check eligibility and enrol via the official portal, or ask at your nearest empanelled hospital or Common Service Centre.",
+    url:"https://pmjay.gov.in"
+  },
+  {
+    name:"Swasthya Sathi",
+    bn:"স্বাস্থ্য সাথী",
+    status:"live", statusLabel:"Live, continuing",
+    audience:["everyone","women","farmers","students"],
+    tags:["Health"],
+    benefit:"Up to ₹5 lakh/year cashless family health cover",
+    who:"All permanent residents of West Bengal not already covered by another government health scheme. Card is issued in the eldest woman's name; no income or age limit.",
+    apply:"Apply online, or bring Aadhaar and address proof to a Duare Sarkar camp for same-day enrolment.",
+    url:"https://swasthyasathi.gov.in"
+  },
+  {
+    name:"PM Kisan + state top-up",
+    bn:"পিএম কিষাণ",
+    status:"rolling", statusLabel:"Rolling out",
+    audience:["farmers"],
+    tags:["Farmers"],
+    benefit:"₹6,000/year from the centre, plus a ₹3,000/year state top-up expected — about ₹9,000/year total",
+    who:"Small and marginal farmer households. West Bengal farmers were previously excluded because the state did not share farmer land records with the centre; that block is being lifted under the new government.",
+    apply:"Registration is via the PM-Kisan portal using land records and Aadhaar; local agriculture office (Krishi Bhavan) can help verify land documents.",
+    url:"https://pmkisan.gov.in"
+  },
+  {
+    name:"Annapurna Bhandar / Annapurna Yojana",
+    bn:"অন্নপূর্ণা যোজনা",
+    status:"rolling", statusLabel:"Notified, live from 1 June 2026",
+    audience:["women"],
+    tags:["Women"],
+    benefit:"Roughly ₹3,000/month cash assistance (final rules to be confirmed)",
+    who:"Women heads of household, along the lines of the earlier Lakshmir Bhandar scheme it is expected to replace or absorb.",
+    apply:"Apply through the state's citizen social registry portal; existing beneficiaries of similar schemes should watch for a migration or re-verification step.",
+    url:"https://socialregistry.wb.gov.in"
+  },
+  {
+    name:"Matrishakti Bharosa Card",
+    bn:"মাতৃশক্তি ভরসা কার্ড",
+    status:"announced", statusLabel:"Announced",
+    audience:["women"],
+    tags:["Women"],
+    benefit:"Roughly ₹3,000/month expected",
+    who:"Women, as part of the BJP government's Bharosa Card family of income-support schemes.",
+    apply:"Rules and application process had not been formally notified as of this writing — check the state government portal for the launch notification.",
+    url:"https://wb.gov.in"
+  },
+  {
+    name:"Yuva Shakti Bharosa Card",
+    bn:"যুব শক্তি ভরসা কার্ড",
+    status:"announced", statusLabel:"Announced (manifesto commitment)",
+    audience:["youth"],
+    tags:["Youth"],
+    benefit:"Roughly ₹3,000/month for eligible job seekers",
+    who:"Unemployed youth registered as job seekers in the state.",
+    apply:"Formal application process not yet notified — check the state employment or labour department portal ahead of rollout.",
+    url:"https://wb.gov.in"
+  },
+  {
+    name:"Bhorsa Karmasathi Scheme",
+    bn:"ভরসা কর্মসাথী",
+    status:"announced", statusLabel:"Announced in June 2026 budget",
+    audience:["youth"],
+    tags:["Youth"],
+    benefit:"₹3,000/month while job-seeking",
+    who:"Unemployed youth in West Bengal, confirmed by the Finance Minister in the 2026-27 state budget on 22 June 2026.",
+    apply:"Application process expected to open after the scheme is formally notified — check the state employment department.",
+    url:"https://wb.gov.in"
+  },
+  {
+    name:"PM Vishwakarma Yojana",
+    bn:"পিএম বিশ্বকর্মা",
+    status:"rolling", statusLabel:"Rolled out from May 2026",
+    audience:["everyone"],
+    tags:["Employment","Artisans"],
+    benefit:"Skill training, a toolkit allowance, and collateral-free loans for traditional trades",
+    who:"Artisans and craftspeople in traditional trades (carpenters, tailors, potters, blacksmiths and similar), now extended to West Bengal after the state government's approval.",
+    apply:"Register on the national portal with proof of trade; local Common Service Centres can assist with registration.",
+    url:"https://pmvishwakarma.gov.in"
+  },
+  {
+    name:"PM Surya Ghar Muft Bijli Yojana",
+    bn:"পিএম সূর্য ঘর যোজনা",
+    status:"live", statusLabel:"Open for applications in WB",
+    audience:["everyone","women","farmers"],
+    tags:["Energy","Housing"],
+    benefit:"Subsidy for rooftop solar, aimed at free or near-free monthly electricity",
+    who:"WBSEDCL electricity consumers with a suitable rooftop, now able to apply after the new state government enabled the scheme.",
+    apply:"Apply on the national solar portal using your electricity consumer number; empanelled vendors handle installation.",
+    url:"https://pmsuryaghar.gov.in"
+  },
+  {
+    name:"Vivekananda Merit Scholarship",
+    bn:"বিবেকানন্দ মেধা বৃত্তি",
+    status:"rolling", statusLabel:"Revived, cabinet-cleared",
+    audience:["students"],
+    tags:["Students"],
+    benefit:"Merit-based scholarship for economically weaker students",
+    who:"Students from economically weaker families with strong board exam results; the Chief Minister announced its revival at a felicitation event for board toppers.",
+    apply:"Check with your school or the state education department for the application window once formally notified.",
+    url:"https://wb.gov.in"
+  },
+  {
+    name:"Free bus travel for women (Pink Card)",
+    bn:"পিঙ্ক কার্ড",
+    status:"announced", statusLabel:"Announced in June 2026 budget",
+    audience:["women"],
+    tags:["Women","Transport"],
+    benefit:"Free travel on government buses",
+    who:"Women across the state, via a dedicated Pink Card; ₹550 crore was allocated in the 2026-27 budget.",
+    apply:"Application details expected from the state transport department once the card is launched.",
+    url:"https://wb.gov.in"
+  },
+  {
+    name:"Ration card (NFSA)",
+    bn:"রেশন কার্ড",
+    status:"live", statusLabel:"Live — re-verification underway",
+    audience:["everyone","women","farmers"],
+    tags:["Housing","Ration"],
+    benefit:"Subsidised food grains under the National Food Security Act",
+    who:"All eligible households — but note that roughly 63 lakh ration cards are being reviewed for cancellation following the state's Special Intensive Revision (SIR) exercise.",
+    apply:"Apply for a new card, or check if your card is affected, on the state Food and Supplies Department portal.",
+    url:"https://food.wb.gov.in"
+  }
+];
+
+const chipDefs = [
+  {key:"all", label:"Everyone"},
+  {key:"farmers", label:"Farmers"},
+  {key:"women", label:"Women"},
+  {key:"youth", label:"Youth & job seekers"},
+  {key:"students", label:"Students"}
+];
+
+let activeAudience = "all";
+let searchTerm = "";
+
+const chipsEl = document.getElementById("audience-chips");
+chipDefs.forEach(c=>{
+  const btn = document.createElement("button");
+  btn.className = "chip" + (c.key==="all" ? " active" : "");
+  btn.textContent = c.label;
+  btn.type = "button";
+  btn.addEventListener("click", ()=>{
+    activeAudience = c.key;
+    [...chipsEl.children].forEach(ch=>ch.classList.remove("active"));
+    btn.classList.add("active");
+    render();
+  });
+  chipsEl.appendChild(btn);
+});
+
+document.getElementById("search").addEventListener("input", e=>{
+  searchTerm = e.target.value.trim().toLowerCase();
+  render();
+});
+
+function matchesAudience(s){
+  if(activeAudience === "all") return true;
+  return s.audience.includes(activeAudience);
+}
+
+function matchesSearch(s){
+  if(!searchTerm) return true;
+  const hay = (s.name + " " + s.tags.join(" ") + " " + s.who + " " + s.benefit).toLowerCase();
+  return hay.includes(searchTerm);
+}
+
+function badgeClass(status){
+  if(status==="live") return "live";
+  if(status==="rolling") return "rolling";
+  return "announced";
+}
+
+function render(){
+  const grid = document.getElementById("scheme-grid");
+  const filtered = schemes.filter(s=>matchesAudience(s) && matchesSearch(s));
+  grid.innerHTML = "";
+  if(filtered.length===0){
+    grid.innerHTML = \'<div class="no-results">No schemes match that search. Try a different word, or pick "Everyone" above.</div>\';
+  } else {
+    filtered.forEach(s=>{
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="top">
+          <div>
+            <h3>${s.name}</h3>
+            <div class="bn-name">${s.bn}</div>
+          </div>
+          <span class="badge ${badgeClass(s.status)}">${s.statusLabel}</span>
+        </div>
+        <div class="benefit">${s.benefit}</div>
+        <div class="who">${s.who}</div>
+        <div class="tags">${s.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+        <div class="apply">${s.apply}</div>
+        <a class="link-btn" href="${s.url}" target="_blank" rel="noopener">Go to official site &#8594;</a>
+      `;
+      grid.appendChild(card);
+    });
+  }
+  document.getElementById("count-line").innerHTML = `Showing <b>${filtered.length}</b> of ${schemes.length} schemes.`;
+}
+
+render();
+</script>
+
+</body>
+</html>
+'
